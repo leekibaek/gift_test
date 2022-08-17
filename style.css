@@ -1,5 +1,6 @@
 body {
-    font-family: 'Jua', sans-serif;
+        
+    font-family: 'Yeon Sung', cursive;
     background-color: #ffffff;
     box-sizing: border-box;
     color: #35465d;
@@ -137,7 +138,7 @@ body {
   .title {
     line-height: 1.67;
     text-align: center;
-    color: #35465d;
+    color: #3880ec;
   }
   
   .subtitle {
@@ -156,28 +157,7 @@ body {
       }
   }
   
-  
-  .youtube-link {
-      font-size: 1.5rem;
-      line-height: 1.71;
-      text-align: center;
-      color: #f73737;
-      text-decoration: underline;
-  }
-  
-  .youtube-link:hover {
-      font-size: 1.5rem;
-      line-height: 1.71;
-      text-align: center;
-      color: #f73737;
-      text-decoration: underline;
-  }
-  
-  .youtube-icon {
-      width: 30px;
-      height: 27.262px;
-  }
-  
+   
   .upload {
       width: 20%;
   }
