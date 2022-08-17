@@ -5,21 +5,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 폰트 설정 -->
+    <link href="https://fonts.googleapis.com/css2?family=Yeon+Sung&display=swap" rel="stylesheet">
 
-    <!-- 스타일 ㅅ기트 연결 -->
-    <link rel="stylesheet" href="style.css">
-
-    <link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">
-
-    <!--부트스트랩 환경 - 네비바,,  -->
+    <!--부트스트랩 환경 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+    <!-- 스타일 시트 연결 -->  
+    <link rel="stylesheet" href="style.css">
+    
     <!-- 코멘트를 위한 스크립트 -->
     <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5e64b3727e862b06"></script>
 
     <!-- 링크이미지 --->
     <meta property="og:image" content="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FLbvO4%2FbtrJqmGHkt2%2FI2U9bKzba6Tbsjgj0t0jl0%2Fimg.jpg">
-    <title>선물 테스트</title>
+    <title>AI 선물 추천 서비스</title>
     
     
 </head>
@@ -30,8 +31,8 @@
     
     <!-- 설명 부분 -->
     <section class="section">
-        <h1 class="title">선물 테스트</h1>
-        <h2 class="subtitle">얼굴로 보는 선물 테스트</h2>
+        <h1 class="title">AI 선물 추천 서비스</h1> 
+        <h2 class="subtitle">이미지와 어울리는 선물을 추천 해드려요</h2>
         
         <!-- "sr-only는 화면상에는 안보이지만, 검색엔진에서 검색대상이 된다." -->
         <!-- <h2 class="sr-only">나는 어떤 동물과 닮았을까? 나의 동물상 찾기를 해보세요!</h2>
@@ -41,11 +42,16 @@
     </section>
 
     <!-- 유튜브 연결 링크 표시 -->
+    <section>
+        <div>
+            <hr>
+        </div>
+    </section>
         
     <!-- 성별 선택 하는 곳 -->
-    <h4 class="pb-2 d-flex justify-content-center">파트너의 성별을 선택하세요</h4>
+    <h4 class="pb-2 d-flex justify-content-center">선물을 주고싶은 파트너의 성별을 선택하세요</h4>
     <section class="d-flex justify-content-center">
-        <p class="d-flex align-items-center pr-3">여자</p>
+        <p class="d-flex align-items-center pr-3"><b style = "color : #f470a7">여자</b></p>
         <div>
             <input type="checkbox" id="gender">
             <label for="gender">
@@ -54,7 +60,7 @@
                 </span>
             </label>
         </div>
-        <p class="d-flex align-items-center pl-3">남자</p>
+        <p class="d-flex align-items-center pl-3"><b style = "color : #75b0d4">남자</b></p>
     </section>
 
     <!-- 사진 업로드 부분 -->
@@ -63,8 +69,8 @@
         <div class="image-upload-wrap" >
             <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
             <div class="drag-text">
-                <img src="img/upload.svg" class="mt-5 pt-5 upload">
-                <h4 class="mb-5 pb-5 pt-4  upload-text">얼굴 사진을 올려놓거나 눌러서 업로드하세요!</h4>
+                <img src="", alt = "image" class="mt-5 pt-5 upload">
+                <h4 class="mb-5 pb-5 pt-4  upload-text">얼굴 사진을 올려놓거나 눌러서 업로드하세요!</h4>                
             </div>
         </div>
         
@@ -76,6 +82,7 @@
                 </div>
                 <p class="text-center">AI가 적절한 선물을 분석중입니다.</p>
             </div>
+            
             <p class="result-message"></p>
             <div id="label-container" class="d-flex flex-column justify-content-around"></div>
             <div id="addThis" class="addthis_inline_share_toolbox_6lz1"></div>
@@ -135,9 +142,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
     <script type="text/javascript">
         let URL;
-        // const urlMale = "https://teachablemachine.withgoogle.com/models/o9D1N5TN/"; 
-        const urlMale = "https://teachablemachine.withgoogle.com/models/MsLV1bveN/"; // 남성용
-        const urlFemale = "https://teachablemachine.withgoogle.com/models/MsLV1bveN/"; // 여성용 - 우선은 남성과 동일하게
+        const urlMale = "https://teachablemachine.withgoogle.com/models/aARKbIq6o/"; //category 30개 - 남자용
+        const urlFemale = "https://teachablemachine.withgoogle.com/models/4Lwh-jcWi/"; // category 30개 - 여성용
         let model, webcam, labelContainer, maxPredictions;
         async function init() {
             if (document.getElementById("gender").checked) {
@@ -161,120 +167,177 @@
             const prediction = await model.predict(image, false);
             prediction.sort((a, b) => parseFloat(b.probability) - parseFloat(a.probability));
             console.log(prediction[0].className);
-            var resultTitle, resultExplain, resultCeleb;
-            if (document.getElementById("gender").checked) {
-                switch (prediction[0].className) {
-                   case "현금":
-                        resultTitle = "현금"
-                        resultExplain = "현금 설명 란~"
-                        resultCeleb = "-"
-                        break;
-                    case "시계":
-                        resultTitle = "시계"
-                        resultExplain = "설명 란~"
-                        resultCeleb = " - "
-                        break;
-                    case "향수":
+            var resultTitle, resultExplain, resultImg;
+            switch (prediction[0].className) {
+                case "향수":
                         resultTitle = "향수"
-                        resultExplain = "향수 타입 설명 - "
-                        resultCeleb = "-"
+                        resultExplain = "이미 얼굴에서 향기가 나지만 그래도 ... ~ 😘"
+                        resultImg = "01_perfume.jpg"
                         break;
-                    case "편지":
-                        resultTitle = "편지"
-                        resultExplain = "바보"
-                        resultCeleb = "-"
+                    case "돈":
+                        resultTitle = "돈"
+                        resultExplain = "최고의 선물은 당연 현금 박치기지 ! 😁👌"
+                        resultImg = "02_money.jpg"
                         break;
                     case "병뚜껑":
                         resultTitle = "병뚜껑"
-                        resultExplain = " 설명란 ~ "
-                        resultCeleb = " - "
+                        resultExplain = "주고도 욕얻어먹는 매직 😇"
+                        resultImg = "03_bottle_cap.jpg"
+                        break;
+                    case "편지":
+                        resultTitle = "편지"
+                        resultExplain = "편지만 받아도 ,, 그저 ,, 해맑은 ,, 당신 ,, 😂"
+                        resultImg = "04_letter.jpg"
+                        break;
+                    case "시계":
+                        resultTitle = "시계"
+                        resultExplain = "시계라고 해서 ,, 꼭 롤렉스는 아니다 ...? 🤫"
+                        resultImg = "05_watch.pjg"
+                        break;
+                    case "소고기":
+                        resultTitle = "소고기"
+                        resultExplain = "생일이면 뭐하겠노 ~ 소고기 사묵겠지 ~ 🐂"
+                        resultImg = "06_beef.jpg"
+                        break;
+                    case "뿅망치":
+                        resultTitle = "뿅망치"
+                        resultExplain = "생일빵과 선물을 동시에 할 수 있는 잇!템! 👻"
+                        resultImg = "07_hammer.jpg"
+                        break;
+                    case "꽃다발":
+                        resultTitle = "꽃다발"
+                        resultExplain = "추천 멘트 : 와 .. ~ 뭐가 꽃이야? 💐 (단, 영혼없이 하면 역효과를 나타낼 수 있음)"
+                        resultImg = "08_flower.jpg"
+                        break;
+                    case "과일바구니":
+                        resultTitle = "과일바구니"
+                        resultExplain = "제철 과일만큼 센스있는 선물은 또 없지 🍎🍊🍋🍐🫐"
+                        resultImg = "09_fruit.jpg"
+                        break;
+                    case "무드등":
+                        resultTitle = "무드등"
+                        resultExplain = "이 조명 ,,, 온도 ,,, 습도 ,,, 🐾"
+                        resultImg = "10_mood.jpg"
+                        break;
+                    case "신발":
+                        resultTitle = "신발"
+                        resultExplain = "거친세상에 뛰어든건 너지만 너의 발은 내가 지킨다 😑❤️"
+                        resultImg = "11_shoes.jpg"
+                        break;
+                    case "커피 기프티콘":
+                        resultTitle = "커피 기프티콘"
+                        resultExplain = "넌 나에게 ... TOP야 ... ☕"
+                        resultImg = "12_coffee.jpg"
+                        break;
+                    case "핸드크림":
+                        resultTitle = "핸드크림"
+                        resultExplain = "거친세상에 뛰어든건 너지만 너의 손은 내가 지킨다 😑❤️"
+                        resultImg = "13_hand_cream.jpg"
+                        break;
+                    case "홍삼":
+                        resultTitle = "홍삼"
+                        resultExplain = "행복하자 우리~ 행복하자 ~아프지🥭~ 아프지🥭~ 🎶"
+                        resultImg = "14_ginseng.jpg"
+                        break;
+                    case "마사지기":
+                        resultTitle = "마사지기"
+                        resultExplain = "힘내세요 ! 시원한 마사지기로 마음을 전해보아요 😊"
+                        resultImg = "15_massage.jpg"
+                        break;
+                    case "드링킹 헬멧":
+                        resultTitle = "드링킹 헬멧"
+                        resultExplain = "두 손의 자유로움, 자유로운 우리를봐 자유로워 ... ~ 🥳"
+                        resultImg = "16_drink.jpg"
+                        break;
+                    case "텐텐":
+                        resultTitle = "텐텐"
+                        resultExplain = "아직 성장판이 닫히지 않았다고 믿는 너에게 ... 🥲"
+                        resultImg = "17_tenten.jpg"
+                        break;
+                    case "책":
+                        resultTitle = "책"
+                        resultExplain = "요새 잠을 못잔다기에 책을 준비했어 .. 드르렁 ~ 😴"
+                        resultImg = "18_book.jpg"
+                        break;
+                    case "초콜렛":
+                        resultTitle = "초콜렛"
+                        resultExplain = "그대에게 달콤한 하루를 선물할래요 🍫"
+                        resultImg = "19_choco.jpg"
+                        break;
+                    case "헤드셋":
+                        resultTitle = "헤드셋"
+                        resultExplain = "MUsIC iS mY LiFE ... 💫"
+                        resultImg = "20_headset.jpg"
+                        break;
+                    case "복면":
+                        resultTitle = "복면"
+                        resultExplain = "당신의 생일을 루/팡/ 하러 왔다 🥷"
+                        resultImg = "21_mask.jpg"
+                        break;
+                    case "아이스크림 케이크":
+                        resultTitle = "아이스크림 케이크"
+                        resultExplain = "그래도 생일엔 케이크에 초는 불어야제 ~! 🎂"
+                        resultImg = "22_ice_cake.jpg"
+                        break;                   
+                    case "비타민":
+                        resultTitle = "비타민"
+                        resultExplain = "너 처럼 톡톡 튀는 상콤한 비타민 ! 😻"
+                        resultImg = "23_vitamin.jpg"
+                        break;
+                    case "치킨":
+                        resultTitle = "치킨"
+                        resultExplain = "앗싸 ! 오늘 저녁은 치킨이닭 ! 🍗"
+                        resultImg = "24_chicken.jpg"
+                        break;
+                    case "비건화장품":
+                        resultTitle = "비건화장품"
+                        resultExplain = "그대는 피부와 환경 모두 생각하는 멋진 사람 😎"
+                        resultImg = "25_vegan.jpg"
+                        break;
+                    case "데오드란트":
+                        resultTitle = "데오드란트"
+                        resultExplain = "Manners Maketh Man ...🙊"
+                        resultImg = "26_deo.jpg"
+                        break;
+                    case "마음":
+                        resultTitle = "마음"
+                        resultExplain = "ㅋ.. 나 .. 너 .. 좋아하냐 ... ? ^^❤️‍🔥"
+                        resultImg = "27_heart.jpg"
+                        break;
+                    case "페이퍼 인센스":
+                        resultTitle = "페이퍼 인센스"
+                        resultExplain = "향으로 몸과 마음에 휴식을 선물하세요 🌱"
+                        resultImg = "28_paper.png"
+                        break;
+                    case "차량용 방향제":
+                        resultTitle = "차량용 방향제"
+                        resultExplain = "차가 없으면 .. 유감이다 🚗 ..."
+                        resultImg = "29_car.png"
+                        break;
+                    case "블루투스 노래방 마이크":
+                        resultTitle = "블루투스 노래방 마이크"
+                        resultExplain = "너의 넘치는 흥을 조금이나마 달래주길 바라며 ... 🤪"
+                        resultImg = "30_blutooth.jpg"
                         break;
                     default:
                         resultTitle = "알수없음"
                         resultExplain = ""
-                        resultCeleb = ""
-                }
-            } else {
-                switch (prediction[0].className) {
-                    case "현금":
-                        resultTitle = "현금"
-                        resultExplain = "현금 설명 란~"
-                        resultCeleb = "-"
-                        break;
-                    case "시계":
-                        resultTitle = "시계"
-                        resultExplain = "설명 란~"
-                        resultCeleb = " - "
-                        break;
-                    case "향수":
-                        resultTitle = "향수"
-                        resultExplain = "향수 타입 설명 - "
-                        resultCeleb = "-"
-                        break;
-                    case "편지":
-                        resultTitle = "편지"
-                        resultExplain = "바보"
-                        resultCeleb = "-"
-                        break;
-                    case "병뚜껑":
-                        resultTitle = "병뚜껑"
-                        resultExplain = " 설명란 ~ "
-                        resultCeleb = " - "
-                        break;
-                    
-                    default:
-                        resultTitle = "알수없음"
-                        resultExplain = ""
-                        resultCeleb = ""
-                }
+                        resultImg = ""
+
+
             }
-            var title = "<div class='" + prediction[0].className + "-animal-title'>" + resultTitle + "</div>"
+            
+            var title = "<div style = 'color : pink'>" + resultTitle + "</div>" //추후에 꾸미기.
             var explain = "<div class='animal-explain pt-2'>" + resultExplain + "</div>"
-            var celeb = "<div class='" + prediction[0].className + "-animal-celeb pt-2 pb-2'>" + resultCeleb + "</div>"
-            $('.result-message').html(title + explain + celeb);
-            var barWidth;
-            for (let i = 0; i < maxPredictions; i++) {
-                if (prediction[i].probability.toFixed(2) > 0.1) {
-                    barWidth = Math.round(prediction[i].probability.toFixed(2) * 100) + "%";
-                } else if (prediction[i].probability.toFixed(2) >= 0.01) {
-                    barWidth = "4%"
-                } else {
-                    barWidth = "2%"
-                }
-                var labelTitle;
-                switch (prediction[i].className) {
-                    case "현금":
-                        labelTitle = "현금"
-                        break;
-                    case "향수":
-                        labelTitle = "향수"
-                        break;
-                    case "병뚜껑":
-                        labelTitle = "병뚜껑"
-                        break;
-                    case "시계":
-                        labelTitle = "시계"
-                        break;
-                    case "편지":
-                        labelTitle = "편지"
-                        break;
-                    case "deer":
-                        labelTitle = "사슴상"
-                        break;
-                    case "fox":
-                        labelTitle = "여우상"
-                        break;
-                    default:
-                        labelTitle = "알수없음"
-                }
-                var label = "<div class='animal-label d-flex align-items-center'>" + labelTitle + "</div>"
-                var bar = "<div class='bar-container position-relative container'><div class='" + prediction[i].className + "-box'></div><div class='d-flex justify-content-center align-items-center " + prediction[i].className + "-bar' style='width: " + barWidth + "'><span class='d-block percent-text'>" + Math.round(prediction[i].probability.toFixed(2) * 100) + "%</span></div></div>"
-                labelContainer.childNodes[i].innerHTML = label + bar;
-            }
+            var img_src = "<img src =./gift_pic/" + resultImg + " style = 'height: 30vh; width : 40vw'>"
+            $('.result-message').html("추천 선물" + title + explain + img_src);
+                    
+         
+            
         }
     </script>
 
-    <!-- 이건잘 모르겠다. 광고 같은데.-->
+ 
    
 
     
